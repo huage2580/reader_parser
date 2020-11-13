@@ -371,7 +371,7 @@ main() async{
   var rule15 = '//*[@id=\"product\"]/ul/li[-2]/text()';
 
   var hparser = HParser(test_detail);
-  var result = hparser.parseRuleString(rule15);
+  var result = hparser.parseRuleString(rule11);
   print(result);
   // for(var x in result){
   //   print(x);

@@ -1,12 +1,11 @@
-
-
 import 'package:html/dom.dart';
-import 'package:yuedu_parser/h_parser/action_parser.dart';
 
-import 'regexp_rule.dart';
+import '../regexp_rule.dart';
+import 'action_parser.dart';
 
-class ActionReplaceParser extends ActionParser{
-  ActionReplaceParser(Document document, String htmlString) : super(document, htmlString);
+class ActionReplaceParser extends ActionParser {
+  ActionReplaceParser(Document document, String htmlString)
+      : super(document, htmlString);
 
   @override
   String formatRule(String rule) {

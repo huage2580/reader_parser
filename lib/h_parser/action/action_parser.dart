@@ -1,17 +1,14 @@
-
-import 'package:html/parser.dart';
 import 'package:html/dom.dart';
-import 'package:html/dom_parsing.dart';
-import 'regexp_rule.dart';
 
-abstract class ActionParser{
+import '../regexp_rule.dart';
+
+abstract class ActionParser {
   Document mDocument;
   String mHtmlString;
 
   var ruleWithoutReplace = "";
   var replaceRegexp = "";
   var needReverse = false;
-
 
   ActionParser(Document document,String htmlString){
     mDocument = document;

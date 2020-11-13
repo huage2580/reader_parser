@@ -1,8 +1,7 @@
 import 'package:html/dom.dart';
-import 'package:yuedu_parser/h_parser/action_parser.dart';
-import 'package:yuedu_parser/h_parser/regexp_rule.dart';
 
-import 'regexp_rule.dart';
+import '../regexp_rule.dart';
+import 'action_parser.dart';
 
 class ActionCssParser extends ActionParser {
   ActionCssParser(Document document, String htmlString)

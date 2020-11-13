@@ -1,8 +1,9 @@
 import 'package:html/dom.dart';
-import 'package:yuedu_parser/h_parser/action_parser.dart';
 import 'package:yuedu_parser/h_parser/regexp_rule.dart';
+import 'package:yuedu_parser/h_parser/xpath/xpath_selector.dart';
 
-import 'xpath/xpath_selector.dart';
+import '../regexp_rule.dart';
+import 'action_parser.dart';
 
 class ActionXPathParser extends ActionParser {
   ActionXPathParser(Document document, String htmlString)
