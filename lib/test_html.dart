@@ -357,24 +357,26 @@ main() async{
   var rule6 = "text.下一页@href";
   var rule7 = r'[name=\"description\"]@content';
   var rule8 = "tbody@tag.tr!0";
-  var rule9 = r".book-info-bookstate@span@text&&.book-info-bookvote@span@text&&.lastchapter@span!0:1@text##更新时间：| \\d+:\\d.*";
-  var rule10 = r"id.product@tag.ul.0@tag.li!-1:-2@tag.a.0@text.生@ownText##重生##测试";
+  var rule9 =
+      r".book-info-bookstate@span@text&&.book-info-bookvote@span@text&&.lastchapter@span!0:1@text##更新时间：| \\d+:\\d.*";
+  var rule10 =
+      r"id.product@tag.ul.0@tag.li!-1:-2@tag.a.0@text.生@ownText##重生##测试";
   var rule11 = r".hotlist@tag.ul@tag.li@text##修(真)##测$1试";
   //-----------测试正则allInOne----------
   var rule12 = r':href=\"(.*html)\".*?>([^<]*)';
   var rule13 = r'##作者.*?\>(.*?)\<##$1###';
 
-
+  //-----测试Xpath-----------
+  var rule14 = "//meta[@name=\"description\"]/@content##简介##测试替换";
+  var rule15 = '//*[@id=\"product\"]/ul/li[-2]/text()';
 
   var hparser = HParser(test_detail);
-  var result = hparser.parseRuleString(rule13);
+  var result = hparser.parseRuleString(rule15);
   print(result);
   // for(var x in result){
   //   print(x);
   // }
   print(DateTime.now());
-
-
 }
 
 

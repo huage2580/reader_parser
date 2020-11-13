@@ -1,11 +1,11 @@
-
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
-import 'package:test_parse_js_html/h_parser/action_css_parser.dart';
-import 'package:test_parse_js_html/h_parser/action_jsoup_parser.dart';
-import 'package:test_parse_js_html/h_parser/action_parser.dart';
-import 'package:test_parse_js_html/h_parser/action_regexp_parser.dart';
-import 'package:test_parse_js_html/h_parser/action_replace_parser.dart';
+import 'package:yuedu_parser/h_parser/action_css_parser.dart';
+import 'package:yuedu_parser/h_parser/action_jsoup_parser.dart';
+import 'package:yuedu_parser/h_parser/action_parser.dart';
+import 'package:yuedu_parser/h_parser/action_regexp_parser.dart';
+import 'package:yuedu_parser/h_parser/action_replace_parser.dart';
+import 'package:yuedu_parser/h_parser/action_xpath_parser.dart';
 
 import 'regexp_rule.dart';
 
@@ -13,10 +13,9 @@ import 'regexp_rule.dart';
 ///解析网页内容
 ///
 
-class HParser{
+class HParser {
   Document _document;
   String _htmlString;
-
 
   HParser(String htmlString){
     _htmlString = htmlString;
@@ -63,13 +62,17 @@ class HParser{
     }else if(rule.startsWith(RegExp(RegexpRule.PARSER_TYPE_REGEXP))){
       actionParser = ActionRegexpParser(_document,_htmlString);
     }
-    else if(rule.startsWith(RegExp(RegexpRule.PARSER_TYPE_REG_REPLACE))){
-      actionParser = ActionReplaceParser(_document,_htmlString);
+    else if (rule.startsWith(RegExp(RegexpRule.PARSER_TYPE_REG_REPLACE))) {
+      actionParser = ActionReplaceParser(_document, _htmlString);
     }
-    else{
+    else if (rule.startsWith(RegExp(RegexpRule.PARSER_TYPE_XPATH))) {
+      _document = parse(_htmlString);
+      actionParser = ActionXPathParser(_document, _htmlString);
+    }
+    else {
       //默认解析
       _document = parse(_htmlString);
-      actionParser = ActionJsoupParser(_document,_htmlString);
+      actionParser = ActionJsoupParser(_document, _htmlString);
     }
     return actionParser;
   }

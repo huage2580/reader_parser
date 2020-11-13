@@ -1,18 +1,15 @@
-
-import 'package:html/parser.dart';
 import 'package:html/dom.dart';
-import 'package:html/dom_parsing.dart';
+import 'package:yuedu_parser/h_parser/action_parser.dart';
+import 'package:yuedu_parser/h_parser/regexp_rule.dart';
+
 import 'regexp_rule.dart';
 
-import 'package:test_parse_js_html/h_parser/action_parser.dart';
-import 'package:test_parse_js_html/h_parser/regexp_rule.dart';
-
-class ActionCssParser extends ActionParser{
-  ActionCssParser(Document document, String htmlString) : super(document, htmlString);
-
+class ActionCssParser extends ActionParser {
+  ActionCssParser(Document document, String htmlString)
+      : super(document, htmlString);
 
   @override
-  List<Element> getElementsEachRule(String rule,bool needFilterText) {
+  List<Element> getElementsEachRule(String rule, bool needFilterText) {
     var resultList = List<Element>();
 
     List<String> u_split = rule.split(RegexpRule.DELIMITER);

@@ -1,13 +1,12 @@
 import 'package:html/dom.dart';
-import 'package:test_parse_js_html/h_parser/action_parser.dart';
-import 'package:test_parse_js_html/h_parser/regexp_rule.dart';
+import 'package:yuedu_parser/h_parser/action_parser.dart';
+import 'package:yuedu_parser/h_parser/regexp_rule.dart';
 
 class ActionJsoupParser extends ActionParser {
   final INVALID = 99999999;
 
-  ActionJsoupParser(Document document, String htmlString) : super(document, htmlString);
-
-
+  ActionJsoupParser(Document document, String htmlString)
+      : super(document, htmlString);
 
   @override
   List<Element> getElementsEachRule(String rule, bool needFilterText) {

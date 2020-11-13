@@ -5,8 +5,10 @@ class RegexpRule{
   static const String PARSER_TYPE_JSON = r"[-+]?@Json:||\$.";
   static const String PARSER_TYPE_XPATH = r"[-+]?@XPath:||//";
   static const String PARSER_TYPE_REGEXP = "[-+]?:"; //正则之AllInOne
-  static const String PARSER_TYPE_REG_REPLACE = "##";//正则替换内容
+  static const String PARSER_TYPE_REG_REPLACE = "##"; //正则替换内容
   static const String PARSER_TYPE_JS = "[-+]?@js:";
+
+  static const String PARSER_DIRECTION = r"[-+]";
 
   static const String OPERATOR_AND = "&&";
   static const String OPERATOR_OR = "||";

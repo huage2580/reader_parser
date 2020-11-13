@@ -1,7 +1,7 @@
 
 
 import 'package:html/dom.dart';
-import 'package:test_parse_js_html/h_parser/action_parser.dart';
+import 'package:yuedu_parser/h_parser/action_parser.dart';
 
 import 'regexp_rule.dart';
 
@@ -10,7 +10,7 @@ class ActionReplaceParser extends ActionParser{
 
   @override
   String formatRule(String rule) {
-    if(rule.startsWith(RegExp('[+-]'))){
+    if (rule.startsWith(RegExp(RegexpRule.PARSER_DIRECTION))) {
       return rule.substring(1);
     }
     return rule;
