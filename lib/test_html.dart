@@ -1,8 +1,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:gbk_codec/gbk_codec.dart';
-
-import 'h_parser/h_parser.dart';
+import 'package:yuedu_parser/h_parser/h_eval_parser.dart';
 
 main() async{
   var test = '''
@@ -369,13 +368,20 @@ main() async{
   //-----测试Xpath-----------
   var rule14 = "//meta[@name=\"description\"]/@content##简介##测试替换";
   var rule15 = '//*[@id=\"product\"]/ul/li[-2]/text()';
+  //---测试简单表达式--------
+  var exp1 = '/search?searchString={{key}}&page={{page}}';
+  var exp2 = '/search?searchString={{key}}&page={{page*2-1}}';
 
-  var hparser = HParser(test_detail);
-  var result = hparser.parseRuleString(rule11);
-  print(result);
+  // var hparser = HParser(test_detail);
+  // var result = hparser.parseRuleString(rule11);
+  // print(result);
   // for(var x in result){
   //   print(x);
   // }
+
+  var eparser = HEvalParser({'page': 10, 'key': 'test'});
+  var result = eparser.parse(exp2);
+  print(result);
   print(DateTime.now());
 }
 

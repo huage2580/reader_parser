@@ -34,8 +34,7 @@ class RegexpRule{
   static const String JSOUP_EXCLUDE_CHAR = "!";
   static const String JSOUP_EXCLUDE_INT = ":";
 
-
   static const String REGEXP_GROUP = r"\$(\d*)";
 
-
+  static const String EXP_MATCH = r"\{\{(.*?)\}\}";
 }

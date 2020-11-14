@@ -30,6 +30,8 @@ dependencies:
   cupertino_icons: ^1.0.0
   # html parser
   html: ^0.14.0+4
+  # 表达式计算
+  expressions: ^0.1.5
   #http
   dio: 3.0.10
   #gbk support
