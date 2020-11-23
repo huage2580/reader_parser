@@ -7,7 +7,7 @@ class HEvalParser {
 
   HEvalParser(this.context);
 
-  dynamic eval(String expression) {
+  dynamic _eval(String expression) {
     Expression exp = Expression.parse(expression);
     // Evaluate expression
     final evaluator = const ExpressionEvaluator();
@@ -15,10 +15,13 @@ class HEvalParser {
   }
 
   String parse(String input) {
+    if(input == null || input.trim().isEmpty){
+      return input;
+    }
     var regexp = RegExp(RegexpRule.EXP_MATCH);
     var mapper = (Match match) {
       var expression = match.group(1);
-      return eval(expression).toString();
+      return _eval(expression).toString();
     };
     return input.replaceAllMapped(regexp, mapper);
   }
