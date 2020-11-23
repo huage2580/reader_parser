@@ -23,22 +23,34 @@ class HParser {
   }
 
   List<Element> parseRuleElements(String rule){
+    if(rule == null || rule.isEmpty){
+      return null;
+    }
     ActionParser actionParser = _factory(rule);
     return actionParser.getElements(rule,false);
   }
 
   Element parseRuleElement(String rule){
+    if(rule == null || rule.isEmpty){
+      return null;
+    }
     ActionParser actionParser = _factory(rule);
     var temp = actionParser.getElements(rule,false);
     return temp.isNotEmpty?temp[0]:null;
   }
 
   List<String> parseRuleStrings(String rule){
+    if(rule == null || rule.isEmpty){
+      return null;
+    }
     ActionParser actionParser = _factory(rule);
     return actionParser.getStrings(rule);
   }
 
   String parseRuleString(String rule){
+    if(rule == null || rule.isEmpty){
+      return null;
+    }
     var result = "";
     ActionParser actionParser = _factory(rule);
     var temp = actionParser.getStrings(rule);
