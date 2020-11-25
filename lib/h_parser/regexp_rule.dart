@@ -22,6 +22,8 @@ class RegexpRule{
   static const String FILTER_OWN_TEXT = "ownText";
   static const String FILTER_HTML = "html";
   static const String FILTER_ALL = "all";
+  static const String FILTER_HREF = "href";
+
 
   static const String JSOUP_SPLIT = ".";
 
@@ -30,6 +32,8 @@ class RegexpRule{
   static const String JSOUP_SUPPORT_TAG = "tag";
   static const String JSOUP_SUPPORT_ID = "id";
   static const String JSOUP_SUPPORT_TEXT = "text";
+  static const String JSOUP_SUPPORT_SELF = "self";
+
 
   static const String JSOUP_EXCLUDE_CHAR = "!";
   static const String JSOUP_EXCLUDE_INT = ":";

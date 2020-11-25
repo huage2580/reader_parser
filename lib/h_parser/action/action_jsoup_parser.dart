@@ -48,6 +48,9 @@ class ActionJsoupParser extends ActionParser {
       var temp2 = [];
       if(each.length > 1){
         temp2 = each[1].split(RegexpRule.JSOUP_EXCLUDE_CHAR);
+      }else{
+        actionType = RegexpRule.JSOUP_SUPPORT_SELF;
+
       }
       var property = temp2.isNotEmpty?temp2[0]:'';
       var excludeIndexP = List<int>();
@@ -65,6 +68,7 @@ class ActionJsoupParser extends ActionParser {
       }
 
       var tempElements = List<Element>();
+
       //操作类型
       if (actionType == RegexpRule.JSOUP_SUPPORT_CHILD) {
         for(var element in elements){
@@ -97,7 +101,10 @@ class ActionJsoupParser extends ActionParser {
           var ctemp = element.querySelector("#$property");
           tempElements.add(ctemp);
         }
-      } else {
+      }else if(actionType == RegexpRule.JSOUP_SUPPORT_SELF){
+        tempElements.addAll(mDocument.body.children);
+      }
+      else {
         for(var element in elements) {
           var ctemp = element.querySelector(ruleEach);
           if(ctemp!=null){
