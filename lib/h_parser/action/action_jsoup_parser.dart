@@ -49,8 +49,8 @@ class ActionJsoupParser extends ActionParser {
       if(each.length > 1){
         temp2 = each[1].split(RegexpRule.JSOUP_EXCLUDE_CHAR);
       }else{
+        filterReg = actionType;
         actionType = RegexpRule.JSOUP_SUPPORT_SELF;
-
       }
       var property = temp2.isNotEmpty?temp2[0]:'';
       var excludeIndexP = List<int>();
