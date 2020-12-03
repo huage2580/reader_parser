@@ -146,7 +146,7 @@ abstract class ActionParser {
       element.querySelectorAll("style").forEach((child) {
         child.remove();
       });
-      text = element.outerHtml;
+      text = element.innerHtml;
     }
     else if(type == RegexpRule.FILTER_ALL){
       text = element.outerHtml;
