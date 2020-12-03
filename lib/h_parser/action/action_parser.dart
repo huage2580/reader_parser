@@ -146,10 +146,10 @@ abstract class ActionParser {
       element.querySelectorAll("style").forEach((child) {
         child.remove();
       });
-      text = element.innerHtml;
+      text = element.text;
     }
     else if(type == RegexpRule.FILTER_ALL){
-      text = element.outerHtml;
+      text = element.innerHtml;
     }else{
       text = element.attributes[type];
     }
