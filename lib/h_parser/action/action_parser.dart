@@ -160,7 +160,7 @@ abstract class ActionParser {
     return element;
   }
 
-  String replaceWithRule(String input,String rule){
+  static String replaceWithRule(String input,String rule){
     var text = input;
     //净化替换
     if(rule!= "" && rule.startsWith(RegexpRule.PARSER_TYPE_REG_REPLACE)){

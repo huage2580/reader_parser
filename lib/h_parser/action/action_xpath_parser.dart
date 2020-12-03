@@ -27,7 +27,7 @@ class ActionXPathParser extends ActionParser {
       var strList = temp.list();
       for (var str in strList) {
         var element = Element.tag('xpath');
-        element.text = replaceWithRule(str, replaceRegexp);
+        element.text = ActionParser.replaceWithRule(str, replaceRegexp);
         result.add(element);
       }
     } else {

@@ -31,7 +31,7 @@ class ActionReplaceParser extends ActionParser {
       temp.add(m.group(0));
     }
     for(var s in temp){
-      result.add(replaceWithRule(s, rule));
+      result.add(ActionParser.replaceWithRule(s, rule));
     }
 
     return result;

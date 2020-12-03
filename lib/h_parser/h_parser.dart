@@ -60,6 +60,10 @@ class HParser {
     return result;
   }
 
+  String parseReplaceRule(String rule){
+    return ActionParser.replaceWithRule(_htmlString, rule);
+  }
+
 
 
 
