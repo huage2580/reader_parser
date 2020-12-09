@@ -55,7 +55,7 @@ class HParser {
     ActionParser actionParser = _factory(rule);
     var temp = actionParser.getStrings(rule);
     for(var s in temp){
-      result += s;
+      result += s+'\n';
     }
     return result;
   }
