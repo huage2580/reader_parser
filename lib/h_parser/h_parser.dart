@@ -51,13 +51,9 @@ class HParser {
     if(rule == null || rule.isEmpty){
       return null;
     }
-    var result = "";
     ActionParser actionParser = _factory(rule);
     var temp = actionParser.getStrings(rule);
-    for(var s in temp){
-      result += s+'\n';
-    }
-    return result;
+    return temp.join('\n');
   }
 
   String parseReplaceRule(String rule){
