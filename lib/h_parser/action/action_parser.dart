@@ -140,11 +140,16 @@ abstract class ActionParser {
       }
     }
     else if(type == RegexpRule.FILTER_HTML){
+
       element.querySelectorAll("script").forEach((child) {
         child.remove();
       });
       element.querySelectorAll("style").forEach((child) {
         child.remove();
+      });
+      //<br>标签手动换行,这解析丢失了标签
+      element.querySelectorAll('br').forEach((child) {
+        child.text = '\n';
       });
       text = element.text;
     }
