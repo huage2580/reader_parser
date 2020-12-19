@@ -18,20 +18,23 @@ class ActionJsoupParser extends ActionParser {
     List<String> u_split = rule.split(RegexpRule.DELIMITER);
     var filterReg = "";
     // 获取文本内容的类型
-    if (u_split.length > 1 && needFilterText) {
+    if (u_split.length >= 1 && needFilterText) {
       filterReg = u_split.removeLast();
-    }
-    if (u_split.isEmpty) {
-      throw Exception("不支持的规则->$rule");
     }
 
     var elements = List<Element>();
     elements = mDocument.children;
+
+    //不执行，只过滤子element然后获得字符串规则
+    if (u_split.isEmpty && needFilterText) {
+      elements.addAll(mDocument.body.children);
+    } else if (u_split.isEmpty) {
+      throw Exception('不支持的规则->$rule');
+    }
+
     //逐条执行
-    for(var ruleEach in u_split){
-
+    for (var ruleEach in u_split) {
       var each = ruleEach.split(RegexpRule.JSOUP_SPLIT);
-
 
       //类型
       var temp = each[0].split(RegexpRule.JSOUP_EXCLUDE_CHAR);
@@ -48,9 +51,6 @@ class ActionJsoupParser extends ActionParser {
       var temp2 = [];
       if(each.length > 1){
         temp2 = each[1].split(RegexpRule.JSOUP_EXCLUDE_CHAR);
-      }else{
-        filterReg = actionType;
-        actionType = RegexpRule.JSOUP_SUPPORT_SELF;
       }
       var property = temp2.isNotEmpty?temp2[0]:'';
       var excludeIndexP = List<int>();
@@ -101,8 +101,6 @@ class ActionJsoupParser extends ActionParser {
           var ctemp = element.querySelector("#$property");
           tempElements.add(ctemp);
         }
-      }else if(actionType == RegexpRule.JSOUP_SUPPORT_SELF){
-        tempElements.addAll(mDocument.body.children);
       }
       else {
         for(var element in elements) {
