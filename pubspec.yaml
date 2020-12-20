@@ -36,6 +36,14 @@ dependencies:
   dio: 3.0.10
   #gbk support
   gbk_codec: ^0.3.2
+  #js_core: support ios ,android , windows , macOS
+  flutter_jscore:
+    git:
+      url: https://github.com/huage2580/flutter_jscore.git
+  #uuid
+  uuid: ^2.2.2
+  # sync http
+  sync_http: ^0.2.0
 
 dev_dependencies:
   flutter_test:
