@@ -376,8 +376,10 @@ main() async {
       '<a href="/read/53698/1523458.html">第713章 大结局，最后一个条件（全书完）</a>';
   var rule16 = '//text()';
   var rule17 = '//@href';
-  var hparser = HParser(rule16_html);
-  var result = hparser.parseRuleString(rule16);
+  var rule18_html = '<div id="123"><p>test</p><p>p2p</p></div><div>2</div>';
+  var rule18 = '//body/div[1]';
+  var hparser = HParser(rule18_html);
+  var result = hparser.parseRuleString(rule18);
   print(result);
   // for(var x in result){
   //   print(x);

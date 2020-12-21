@@ -150,7 +150,17 @@ class SelectorEvaluator extends VisitorBase {
       getAttrByElements(elements());
     } else {
       for (var element in elements()) {
-        list.add(element.outerHtml);
+        element.querySelectorAll('br').forEach((br) {
+          br.text = '\n';
+        });
+        element.querySelectorAll('p').forEach((p) {
+          if (p.text.endsWith('\n') || p.text.startsWith('\n')) {
+            (p.text ?? '').trim();
+          } else {
+            p.text = p.text + '\n';
+          }
+        });
+        list.add(element.text);
       }
     }
     if (list.isEmpty) {
