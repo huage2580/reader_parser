@@ -1,9 +1,9 @@
-
 import 'package:dio/dio.dart';
 import 'package:gbk_codec/gbk_codec.dart';
-import 'package:yuedu_parser/h_parser/h_eval_parser.dart';
 
-main() async{
+import 'h_parser/h_parser.dart';
+
+main() async {
   var test = '''
   <!DOCTYPE html "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head>
     <meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8">
@@ -372,19 +372,22 @@ main() async{
   var exp1 = '/search?searchString={{key}}&page={{page}}';
   var exp2 = '/search?searchString={{key}}&page={{page*2-1}}';
 
-  // var hparser = HParser(test_detail);
-  // var result = hparser.parseRuleString(rule11);
-  // print(result);
+  var rule16_html =
+      '<a href="/read/53698/1523458.html">第713章 大结局，最后一个条件（全书完）</a>';
+  var rule16 = '//text()';
+  var rule17 = '//@href';
+  var hparser = HParser(rule16_html);
+  var result = hparser.parseRuleString(rule16);
+  print(result);
   // for(var x in result){
   //   print(x);
   // }
 
-  var eparser = HEvalParser({'page': 10, 'key': 'test'});
-  var result = eparser.parse(exp2);
-  print(result);
-  print(DateTime.now());
+  // var eparser = HEvalParser({'page': 10, 'key': 'test'});
+  // var result = eparser.parse(exp2);
+  // print(result);
+  // print(DateTime.now());
 }
-
 
 dynamic getHttp() async {
   try {
