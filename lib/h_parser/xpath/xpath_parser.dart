@@ -28,7 +28,7 @@ SelectorGroup parseSelectorGroup(String xpath) {
   }
   //只作用于自身的时候
   if (selectorSources.isEmpty) {
-    selectorSources.add('//body');
+    selectorSources.add('//body/*');
   }
 
   for (var source in selectorSources) {
