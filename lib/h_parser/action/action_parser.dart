@@ -1,10 +1,13 @@
 import 'package:html/dom.dart';
+import 'package:yuedu_parser/h_parser/dsoup/soup_object_cache.dart';
 
 import '../regexp_rule.dart';
 
 abstract class ActionParser {
   Document mDocument;
   String mHtmlString;
+  SoupObjectCache _objectCache;
+
 
   var ruleWithoutReplace = "";
   var replaceRegexp = "";
@@ -13,6 +16,11 @@ abstract class ActionParser {
   ActionParser(Document document,String htmlString){
     mDocument = document;
     mHtmlString = htmlString;
+  }
+
+
+  set objectCache(SoupObjectCache value) {
+    _objectCache = value;
   }
 
   /// 只处理倒叙，组合操作符，切割规则以后，交由继承类实现

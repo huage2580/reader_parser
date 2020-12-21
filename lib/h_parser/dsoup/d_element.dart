@@ -1,55 +1,83 @@
 import 'package:html/dom.dart';
 import 'package:yuedu_parser/h_parser/dsoup/d_elements.dart';
 import 'package:yuedu_parser/h_parser/dsoup/dsoup.dart';
+import 'package:yuedu_parser/h_parser/dsoup/soup_object_cache.dart';
 
 class DElement {
   String uid;
   Element element;
-
-  DElement(this.element) {
+  SoupObjectCache objectCache;
+  DElement(this.element,SoupObjectCache objectCache) {
     this.uid = DSoup.uuid.v1();
+    this.objectCache = objectCache;
+    objectCache.putElement(this);
   }
 
   DElements select(String cssQuery) {
-    return DElements(element.querySelectorAll(cssQuery));
+    return DElements(element.querySelectorAll(cssQuery),objectCache);
   }
 
-  DElement selectFirst(String query) {}
+  DElement selectFirst(String query) {
+    return DElement(element.querySelector(query),objectCache);
+  }
 
-  String attr(String attributeKey) {}
+  String attr(String attributeKey) {
+    return element.attributes[attributeKey];
+  }
 
-  bool hasAttr(String attributeKey) {}
+  bool hasAttr(String attributeKey) {
+    return element.attributes.containsKey(attributeKey);
+  }
 
-  bool hasClass(String className) {}
+  bool hasClass(String className) {
+    return element.classes.contains(className);
+  }
 
-  String text() {}
+  String text() {
+    return element.text;
+  }
 
-  bool hasText() {}
+  String html() {
+    element.querySelectorAll("script").forEach((child) {
+      child.remove();
+    });
+    element.querySelectorAll("style").forEach((child) {
+      child.remove();
+    });
+    //<br>标签手动换行
+    element.querySelectorAll('br').forEach((child) {
+      child.text = '\n';
+    });
+    return element.text;
+  }
 
-  String html() {}
+  String outerHtml() {
+    return element.outerHtml;
+  }
 
-  String outerHtml() {}
+  DElement remove() {
+    element.remove();
+    return this;
+  }
 
-  DElement before(String html) {}
+  String className() {
+    return element.className;
+  }
 
-  DElement after(String html) {}
+  DElements getElementsByTag(String tagName) {
+    return DElements(element.getElementsByTagName(tagName), objectCache);
+  }
 
-  DElement remove() {}
+  DElement getElementById(String id) {
+    return DElement(element.querySelector('#$id'), objectCache);
+  }
 
-  String className() {}
-
-  DElements getElementsByTag(String tagName) {}
-
-  DElement getElementById(String id) {}
-
-  DElements getElementsByClass(String className) {}
-
-  DElements getElementsByAttribute(String key) {}
-
-  DElements getElementsByAttributeValue(String key, String value) {}
+  DElements getElementsByClass(String className) {
+    return DElements(element.getElementsByClassName(className), objectCache);
+  }
 
   @override
   String toString() {
-    return text();
+    return 'Delement{uid:$uid}\n${element.outerHtml}';
   }
 }

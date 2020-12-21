@@ -1,5 +1,6 @@
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
+import 'package:yuedu_parser/h_parser/dsoup/soup_object_cache.dart';
 import 'package:yuedu_parser/h_parser/regexp_rule.dart';
 
 import 'action/action_css_parser.dart';
@@ -17,6 +18,9 @@ import 'regexp_rule.dart';
 class HParser {
   Document _document;
   String _htmlString;
+
+  SoupObjectCache _objectCache;
+
 
   HParser(String htmlString){
     _htmlString = htmlString;
@@ -61,6 +65,10 @@ class HParser {
   }
 
 
+  set objectCache(SoupObjectCache value) {
+    _objectCache = value;
+  }
+
 
 
   ActionParser _factory(String rule){
@@ -95,8 +103,11 @@ class HParser {
       _document = parse(_htmlString);
       actionParser = ActionJsoupParser(_document, _htmlString);
     }
+    actionParser.objectCache = _objectCache;
     return actionParser;
   }
+
+
 
 
 }

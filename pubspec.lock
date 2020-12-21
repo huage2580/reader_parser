@@ -207,13 +207,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.0-nullsafety.3"
-  sync_http:
-    dependency: "direct main"
-    description:
-      name: sync_http
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.2.0"
   term_glyph:
     dependency: transitive
     description:

@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_jscore/flutter_jscore.dart';
+import 'package:yuedu_parser/h_parser/jscore/JSRuntime.dart';
 
 void main() {
   runApp(MyApp());
@@ -53,14 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+    runJS();
+    // testDio();
   }
 
   @override
@@ -114,4 +111,25 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  void runJS() {
+    var jsRuntime = JSRuntime.init();
+    jsRuntime.injectArgs({'id':'123'});
+    JSValue jsValue = jsRuntime.evaluate('''
+    var doc = org.jsoup.Jsoup.parse('<div><p>content</p><p>p2p</p></div>');
+    doc.select('p').toArray();
+    java.put('test','234');
+    java.get('test');
+    var t = java.base64Encode('qq');
+    java.base64Decode(t);
+    ''');
+    print(jsValue.string);
+    if(jsValue.isObject){
+      String serialized = jsValue.createJSONString(null).string;
+      print(serialized);
+    }
+    jsRuntime.destroy();
+
+  }
+
 }
