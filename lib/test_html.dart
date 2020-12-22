@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:gbk_codec/gbk_codec.dart';
+import 'package:yuedu_parser/h_parser/regexp_rule.dart';
 
-import 'h_parser/h_parser.dart';
 
 main() async {
   var test = '''
@@ -479,9 +479,9 @@ main() async {
   ''';
   var rule19 = r'//*[@class="col1 volumn"][3]/following-sibling::li/a/@href';
 
-  var hparser = HParser(rule19_html);
-  var result = hparser.parseRuleString(rule19);
-  print(result);
+  // var hparser = HParser(rule19_html);
+  // var result = hparser.parseRuleString(rule19);
+  // print(result);
   // for(var x in result){
   //   print(x);
   // }
@@ -490,6 +490,17 @@ main() async {
   // var result = eparser.parse(exp2);
   // print(result);
   // print(DateTime.now());
+
+
+  var rule20 = r'onclick#.+\\((\\d+)\\)#https://mobile.hotread.com/story/$1<js>java.ajax(result)</js>.detail@.book-type@text<js>java.ajax(result)</js>';
+  var jsScripts = RegExp(RegexpRule.JS_SPLIT).allMatches(rule20);
+  if(jsScripts.isNotEmpty){
+    jsScripts.forEach((m) {
+      var js = m.group(1);
+      print(js);
+    });
+  }
+
 }
 
 dynamic getHttp() async {

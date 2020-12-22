@@ -133,17 +133,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void testJsParser(){
     var test_html = r'<a id="123">qq_3</a>';
-    var rule1 = r"id##2@js:result=result-1;baseUrl.replace(/index=\\d+/,'')+'index='+result";
+    var rule1 = r"id##2<js>result=result-1;baseUrl.replace(/index=\\d+/,'')+'index='+result</js>";
     var rule2 = r"text";
-    var rule3 = r"@js:org.jsoup.Jsoup.parse(result).select('a')";
+    var rule3 = r"<js>org.jsoup.Jsoup.parse(result).select('a')</js>";
     var hparser = HParser(test_html);
     hparser.objectCache = SoupObjectCache();
     hparser.injectArgs = {'baseUrl':'http://baidu.com?index=123'};
-    var result = hparser.parseRuleElements(rule3);
+    var result = hparser.parseRuleString(rule1);
     print(result);
-    for (var value in result) {
-      print(value.outerHtml);
-    }
+    // for (var value in result) {
+    //   print(value.outerHtml);
+    // }
   }
 
 

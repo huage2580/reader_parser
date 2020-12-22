@@ -13,6 +13,8 @@ class RegexpRule{
   static const String EXPRESSION_JS_TOKEN = '<js>';
   static const String EXPRESSION_JS_TOKEN_CLOSE = r'</js>';
 
+  static const String JS_SPLIT = r'<js>(.*)</js>';
+
   static const String OPERATOR_AND = "&&";
   static const String OPERATOR_OR = "||";
   static const String OPERATOR_MERGE = "%%";

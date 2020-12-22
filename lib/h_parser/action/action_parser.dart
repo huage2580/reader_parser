@@ -43,13 +43,18 @@ abstract class ActionParser {
     }
     ruleWithoutReplace = formatRule(rule);
 
-    //0 先去掉@js规则
+    //0 先去掉@js规则,和<js></js>最后一个规则
 
     //先过滤@JS：，肯定是最后一个
     var jsIndex = ruleWithoutReplace.indexOf(RegexpRule.PARSER_ACTION_JS);
     if(jsIndex != -1){
       jsActionAtStr = ruleWithoutReplace.substring(jsIndex+4);
-      ruleWithoutReplace = ruleWithoutReplace.substring(0,jsIndex);
+      ruleWithoutReplace = ruleWithoutReplace.substring(0,jsIndex).replaceAll('\n', '');
+    }
+    jsIndex = ruleWithoutReplace.indexOf(RegexpRule.EXPRESSION_JS_TOKEN);
+    if(jsIndex != -1){
+      jsActionAtStr = ruleWithoutReplace.substring(jsIndex+4,ruleWithoutReplace.length-5);
+      ruleWithoutReplace = ruleWithoutReplace.substring(0,jsIndex).replaceAll('\n', '');
     }
 
     //1 先去掉最后的净化

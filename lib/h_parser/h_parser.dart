@@ -82,12 +82,15 @@ class HParser {
   ActionParser _factory(String rule){
     ActionParser actionParser;
     //先过滤和指定解析方式
-    // if (RegExp(RegexpRule.PARSER_TYPE_JS).hasMatch(rule)) {
-    //   throw Exception("不支持js语法->$rule");
-    // }
-    // if (rule.contains(RegexpRule.EXPRESSION_JS_TOKEN)) {
-    //   throw Exception("不支持js表达式->$rule");
-    // }
+    if (RegExp('java.ajax').hasMatch(rule)) {
+      throw Exception("不支持的js语法->$rule");
+    }
+    if (RegExp('Jsoup.connect').hasMatch(rule)) {
+      throw Exception("不支持的js语法->$rule");
+    }
+    if(RegExp(RegexpRule.EXPRESSION_JS_TOKEN).hasMatch(rule) && !rule.endsWith(RegexpRule.EXPRESSION_JS_TOKEN_CLOSE)){
+      throw Exception("不支持的js语法->$rule");
+    }
     if (RegExp(RegexpRule.PARSER_TYPE_JSON).hasMatch(rule)) {
       //我发现大多使用json的都是抓的app接口，需要配合js引擎执行一些代码，
       // 计划中不包含JS执行引擎
