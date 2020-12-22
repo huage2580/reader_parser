@@ -4,6 +4,7 @@ class TokenKind {
   static const int ROOT = 2; //       //
   static const int CURRENT = 3; //   .
   static const int PARENT = 4; //    ..
+  static const int SIBLING = 5; //    following-sibling
 
   // List position type
   static const int PLUS = 11; //               +

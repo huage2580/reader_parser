@@ -26,6 +26,11 @@ SelectorGroup parseSelectorGroup(String xpath) {
     output = selectorSources.last;
     selectorSources.removeLast();
   }
+  //只作用于自身的时候
+  if (selectorSources.isEmpty) {
+    selectorSources.add('//body');
+    selectorSources.add('/*');
+  }
 
   for (var source in selectorSources) {
     selectors.add(_parseSelector(source));
@@ -53,10 +58,21 @@ Selector _parseSelector(String input) {
   if (input.startsWith("//")) {
     type = TokenKind.ROOT;
     source = input.substring(2, input.length);
-  } else if (input.startsWith("/")) {
+  }
+  else if(input.startsWith('/following-sibling')){
+    type = TokenKind.SIBLING;
+    var m = RegExp('::(.*)?').firstMatch(input);
+    var name = '*';
+    if (m != null) {
+      name = m.group(1);
+    }
+    source = name;
+  }
+  else if (input.startsWith("/")) {
     type = TokenKind.CHILD;
     source = input.substring(1, input.length);
-  } else {
+  }
+  else {
     throw FormatException("'$input' is not a valid xpath query string");
   }
 
@@ -64,54 +80,71 @@ Selector _parseSelector(String input) {
   if (source == "..") {
     return Selector(TokenKind.PARENT, [ElementSelector("*", "")]);
   }
-
   var selector = Selector(type, simpleSelectors);
 
   //匹配条件
-  var match = RegExp("(.+)\\[(.+)\\]").firstMatch(source);
+  var match = RegExp("(.+)\\[(.+)\\]").firstMatch(source);//两条或者三条的规则
+  var match3 = RegExp("(.+)\\[(.+)\\]\\[(.*)\\]").firstMatch(source);
   if (match != null) {
     var elementName = match.group(1);
-    simpleSelectors.add(ElementSelector(elementName, input));
+    var attrRule;
+    var indexRule;
     var group = match.group(2);
+    if(group.startsWith("@")){
+      attrRule = group;
+    }else{
+      indexRule = group;
+    }
+    if(match3!=null){
+      elementName = match3.group(1);
+      attrRule = match3.group(2);
+      indexRule = match3.group(3);
+    }
+    simpleSelectors.add(ElementSelector(elementName, input));
+
     //匹配Attr
-    if (group.startsWith("@")) {
+    if (attrRule!=null && attrRule.startsWith("@")) {
       var m =
-          RegExp("^@(.+?)(=|!=|\\^=|~=|\\*=|\\\$=)(.+)\$").firstMatch(group);
+          RegExp("^@(.+?)(=|!=|\\^=|~=|\\*=|\\\$=)(.+)\$").firstMatch(attrRule);
       if (m != null) {
         var name = m.group(1);
         var op = TokenKind.matchAttrOperator(m.group(2));
         var value = m.group(3).replaceAll(RegExp("['\"]"), "");
-        simpleSelectors.add(AttributeSelector(name, op, value, group));
+        simpleSelectors.add(AttributeSelector(name, op, value, attrRule));
       } else {
         simpleSelectors.add(AttributeSelector(
-            group.substring(1, group.length), TokenKind.NO_MATCH, null, group));
+            attrRule.substring(1, attrRule.length), TokenKind.NO_MATCH, null, attrRule));
       }
     }
-    //匹配数字
-    var m = RegExp("^\\d+\$").firstMatch(group);
-    if (m != null) {
-      var position = int.tryParse(m.group(0));
-      selector.positionSelector =
-          PositionSelector(TokenKind.NUM, TokenKind.NO_MATCH, position, input);
+
+    if(indexRule!=null){
+      //匹配数字
+      var m = RegExp("^\\d+\$").firstMatch(indexRule);
+      if (m != null) {
+        var position = int.tryParse(m.group(0));
+        selector.positionSelector =
+            PositionSelector(TokenKind.NUM, TokenKind.NO_MATCH, position, input);
+      }
+
+      //匹配position()方法
+      m = RegExp("^position\\(\\)(<|<=|>|>=)(\\d+)\$").firstMatch(indexRule);
+      if (m != null) {
+        var op = TokenKind.matchPositionOperator(m.group(1));
+        var value = int.tryParse(m.group(2));
+        selector.positionSelector =
+            PositionSelector(TokenKind.POSITION, op, value, input);
+      }
+
+      //匹配last()方法
+      m = RegExp("^last\\(\\)(-)?(\\d+)?\$").firstMatch(indexRule);
+      if (m != null) {
+        var op = TokenKind.matchPositionOperator(m.group(1));
+        var value = int.tryParse(m.group(2) ?? "");
+        selector.positionSelector =
+            PositionSelector(TokenKind.LAST, op, value, input);
+      }
     }
 
-    //匹配position()方法
-    m = RegExp("^position\\(\\)(<|<=|>|>=)(\\d+)\$").firstMatch(group);
-    if (m != null) {
-      var op = TokenKind.matchPositionOperator(m.group(1));
-      var value = int.tryParse(m.group(2));
-      selector.positionSelector =
-          PositionSelector(TokenKind.POSITION, op, value, input);
-    }
-
-    //匹配last()方法
-    m = RegExp("^last\\(\\)(-)?(\\d+)?\$").firstMatch(group);
-    if (m != null) {
-      var op = TokenKind.matchPositionOperator(m.group(1));
-      var value = int.tryParse(m.group(2) ?? "");
-      selector.positionSelector =
-          PositionSelector(TokenKind.LAST, op, value, input);
-    }
   } else {
     simpleSelectors.add(ElementSelector(source, input));
   }
