@@ -1,5 +1,6 @@
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
+import 'package:yuedu_parser/h_parser/action/action_json_parser.dart';
 import 'package:yuedu_parser/h_parser/dsoup/soup_object_cache.dart';
 import 'package:yuedu_parser/h_parser/regexp_rule.dart';
 
@@ -91,11 +92,7 @@ class HParser {
     if(RegExp(RegexpRule.EXPRESSION_JS_TOKEN).hasMatch(rule) && !rule.endsWith(RegexpRule.EXPRESSION_JS_TOKEN_CLOSE)){
       throw Exception("不支持的js语法->$rule");
     }
-    if (RegExp(RegexpRule.PARSER_TYPE_JSON).hasMatch(rule)) {
-      //我发现大多使用json的都是抓的app接口，需要配合js引擎执行一些代码，
-      // 计划中不包含JS执行引擎
-      throw Exception("不支持json语法->$rule");
-    }
+
 
     //-------------分派解析器---------------
     if (rule.startsWith(RegExp(RegexpRule.PARSER_TYPE_CSS))) {
@@ -108,6 +105,8 @@ class HParser {
     } else if (rule.startsWith(RegExp(RegexpRule.PARSER_TYPE_XPATH))) {
       _document = parse(_htmlString);
       actionParser = ActionXPathParser(_document, _htmlString);
+    }else if (RegExp(RegexpRule.PARSER_TYPE_JSON).hasMatch(rule)) {
+      actionParser = ActionJsonParser(_document, _htmlString);
     }
     else {
       //默认解析

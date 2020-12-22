@@ -139,6 +139,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.1.4"
+  json_path:
+    dependency: "direct main"
+    description:
+      name: json_path
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.0"
   matcher:
     dependency: transitive
     description:

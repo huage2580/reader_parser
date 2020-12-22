@@ -42,6 +42,8 @@ dependencies:
       url: https://github.com/huage2580/flutter_jscore.git
   #uuid
   uuid: ^2.2.2
+  #json_path
+  json_path: ^0.2.0
 
 dev_dependencies:
   flutter_test:

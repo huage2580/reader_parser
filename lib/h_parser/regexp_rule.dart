@@ -2,7 +2,7 @@
 ///正则和一些匹配的常量
 class RegexpRule{
   static const String PARSER_TYPE_CSS = "[-+]?@css:";
-  static const String PARSER_TYPE_JSON = r"[-+]?@Json:|\$\.";
+  static const String PARSER_TYPE_JSON = r"[-+]?@JSon:|\$\.";
   static const String PARSER_TYPE_XPATH = r"[-+]?@XPath:|//";
   static const String PARSER_TYPE_REGEXP = "[-+]?:"; //正则之AllInOne
   static const String PARSER_TYPE_REG_REPLACE = "##"; //正则替换内容
