@@ -79,6 +79,25 @@ class SelectorEvaluator extends VisitorBase {
           _results.add(_element);
         }
         break;
+      case TokenKind.SIBLING:
+        if (node.parent == null) return null;
+        var siblings = node.parent.nodes;
+        var elements = List();
+        for (var value in siblings) {
+          if(value is Element){
+            elements.add(value);
+          }
+        }
+        for (var i = elements.indexOf(node) + 1; i < elements.length; i++) {
+          var s = elements[i];
+          if (s is! Element) continue;
+          _element = s;
+          if (selector.visit(this)) {
+            _temps.add(s);
+          }
+        }
+        _removeIfNotMatchPosition(selector);
+        _results.addAll(_temps);
     }
   }
 

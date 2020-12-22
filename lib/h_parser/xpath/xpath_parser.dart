@@ -58,10 +58,21 @@ Selector _parseSelector(String input) {
   if (input.startsWith("//")) {
     type = TokenKind.ROOT;
     source = input.substring(2, input.length);
-  } else if (input.startsWith("/")) {
+  }
+  else if(input.startsWith('/following-sibling')){
+    type = TokenKind.SIBLING;
+    var m = RegExp('::(.*)?').firstMatch(input);
+    var name = '*';
+    if (m != null) {
+      name = m.group(1);
+    }
+    source = name;
+  }
+  else if (input.startsWith("/")) {
     type = TokenKind.CHILD;
     source = input.substring(1, input.length);
-  } else {
+  }
+  else {
     throw FormatException("'$input' is not a valid xpath query string");
   }
 
@@ -69,7 +80,6 @@ Selector _parseSelector(String input) {
   if (source == "..") {
     return Selector(TokenKind.PARENT, [ElementSelector("*", "")]);
   }
-
   var selector = Selector(type, simpleSelectors);
 
   //匹配条件
