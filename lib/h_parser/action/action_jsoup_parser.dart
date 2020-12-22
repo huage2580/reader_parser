@@ -16,6 +16,7 @@ class ActionJsoupParser extends ActionParser {
     //class.odd.0
     //class.grid@tbody@td@children
     List<String> u_split = rule.split(RegexpRule.DELIMITER);
+
     var filterReg = "";
     // 获取文本内容的类型
     if (u_split.length >= 1 && needFilterText) {
@@ -27,7 +28,7 @@ class ActionJsoupParser extends ActionParser {
 
     //不执行，只过滤子element然后获得字符串规则
     if (u_split.isEmpty && needFilterText) {
-      elements.addAll(mDocument.body.children);
+      elements = mDocument.body.children;
     } else if (u_split.isEmpty) {
       throw Exception('不支持的规则->$rule');
     }

@@ -7,6 +7,7 @@ import 'package:flutter_jscore/binding/js_object_ref.dart' as jsObject;
 import 'package:flutter_jscore/binding/js_string_ref.dart';
 import 'package:flutter_jscore/flutter_jscore.dart';
 import 'package:flutter_jscore/jscore/js_value.dart';
+import 'package:yuedu_parser/h_parser/dsoup/d_element.dart';
 import 'package:yuedu_parser/h_parser/dsoup/d_elements.dart';
 import 'package:yuedu_parser/h_parser/dsoup/dsoup.dart';
 import 'package:yuedu_parser/h_parser/dsoup/soup_object_cache.dart';
@@ -23,8 +24,8 @@ class JSRuntime {
   Map<String,JSMethodCall> bindingMethod = HashMap();
   SoupObjectCache _objectCache;
 
-  JSRuntime.init() {
-    _objectCache = SoupObjectCache();
+  JSRuntime.init(SoupObjectCache cache) {
+    _objectCache = cache;
     _contextGroup = jSContextGroupCreate();
     _globalContext = jSGlobalContextCreateInGroup(_contextGroup, nullptr);
     _globalObject = jSContextGetGlobalObject(_globalContext);
@@ -37,20 +38,16 @@ class JSRuntime {
   void injectArgs(Map<String, dynamic> map) {
     //todo 改成普通的脚本执行方式，方便注入elements
     map.forEach((key, value) {
-      _injectString(key, value);
+      if(value is DElement){
+        evaluate("var $key = 'new DElement(${value.uid});'");
+      }else if(value is DElements){
+        evaluate("var $key = 'new DElements(${value.uid});'");
+      }else{
+        evaluate("var $key = '$value';");
+      }
     });
   }
 
-  void _injectString(String name,String v){
-    var value = JSValue.makeString(context, v);
-    jsObject.jSObjectSetProperty(
-        _globalContext,
-        _globalObject,
-        _generateJsString(name),
-        value.pointer,
-        jsObject.JSPropertyAttributes.kJSPropertyAttributeNone,
-        nullptr);
-  }
 
   void injectFunction(){
     // 注册flutter.call方法

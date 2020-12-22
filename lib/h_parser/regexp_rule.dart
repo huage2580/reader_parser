@@ -6,11 +6,12 @@ class RegexpRule{
   static const String PARSER_TYPE_XPATH = r"[-+]?@XPath:|//";
   static const String PARSER_TYPE_REGEXP = "[-+]?:"; //正则之AllInOne
   static const String PARSER_TYPE_REG_REPLACE = "##"; //正则替换内容
-  static const String PARSER_TYPE_JS = "[-+]?@js:";
 
   static const String PARSER_DIRECTION = r"[-+]";
 
+  static const String PARSER_ACTION_JS = "@js:";
   static const String EXPRESSION_JS_TOKEN = '<js>';
+  static const String EXPRESSION_JS_TOKEN_CLOSE = r'</js>';
 
   static const String OPERATOR_AND = "&&";
   static const String OPERATOR_OR = "||";

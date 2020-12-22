@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_jscore/flutter_jscore.dart';
+import 'package:yuedu_parser/h_parser/dsoup/soup_object_cache.dart';
+import 'package:yuedu_parser/h_parser/h_parser.dart';
 import 'package:yuedu_parser/h_parser/jscore/JSRuntime.dart';
 
 void main() {
@@ -56,8 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    runJS();
+    // runJS();
     // testDio();
+    testJsParser();
   }
 
   @override
@@ -113,15 +116,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void runJS() {
-    var jsRuntime = JSRuntime.init();
+    var jsRuntime = JSRuntime.init(SoupObjectCache());
     jsRuntime.injectArgs({'id':'123'});
     JSValue jsValue = jsRuntime.evaluate('''
     var doc = org.jsoup.Jsoup.parse('<div><p>content</p><p>p2p</p></div>');
-    doc.select('p').toArray();
-    java.put('test','234');
-    java.get('test');
-    var t = java.base64Encode('qq');
-    java.base64Decode(t);
+    doc.select('p');
     ''');
     print(jsValue.string);
     if(jsValue.isObject){
@@ -131,5 +130,21 @@ class _MyHomePageState extends State<MyHomePage> {
     jsRuntime.destroy();
 
   }
+
+  void testJsParser(){
+    var test_html = r'<a id="123">qq_3</a>';
+    var rule1 = r"id##2@js:result=result-1;baseUrl.replace(/index=\\d+/,'')+'index='+result";
+    var rule2 = r"text";
+    var rule3 = r"@js:org.jsoup.Jsoup.parse(result).select('a')";
+    var hparser = HParser(test_html);
+    hparser.objectCache = SoupObjectCache();
+    hparser.injectArgs = {'baseUrl':'http://baidu.com?index=123'};
+    var result = hparser.parseRuleElements(rule3);
+    print(result);
+    for (var value in result) {
+      print(value.outerHtml);
+    }
+  }
+
 
 }

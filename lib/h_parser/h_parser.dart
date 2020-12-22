@@ -20,6 +20,7 @@ class HParser {
   String _htmlString;
 
   SoupObjectCache _objectCache;
+  Map<String,dynamic> _injectArgs;
 
 
   HParser(String htmlString){
@@ -48,7 +49,9 @@ class HParser {
       return null;
     }
     ActionParser actionParser = _factory(rule);
-    return actionParser.getStrings(rule);
+    var results = actionParser.getStrings(rule);
+    results.map((e) => actionParser.jsActionForString(e,actionParser.jsActionAtStr));
+    return results;
   }
 
   String parseRuleString(String rule){
@@ -57,7 +60,9 @@ class HParser {
     }
     ActionParser actionParser = _factory(rule);
     var temp = actionParser.getStrings(rule);
-    return temp.join('\n');
+    var result = temp.join('\n');
+    result = actionParser.jsActionForString(result,actionParser.jsActionAtStr);
+    return result;
   }
 
   String parseReplaceRule(String rule){
@@ -70,16 +75,19 @@ class HParser {
   }
 
 
+  set injectArgs(Map<String, dynamic> value) {
+    _injectArgs = value;
+  }
 
   ActionParser _factory(String rule){
     ActionParser actionParser;
     //先过滤和指定解析方式
-    if (RegExp(RegexpRule.PARSER_TYPE_JS).hasMatch(rule)) {
-      throw Exception("不支持js语法->$rule");
-    }
-    if (rule.contains(RegexpRule.EXPRESSION_JS_TOKEN)) {
-      throw Exception("不支持js表达式->$rule");
-    }
+    // if (RegExp(RegexpRule.PARSER_TYPE_JS).hasMatch(rule)) {
+    //   throw Exception("不支持js语法->$rule");
+    // }
+    // if (rule.contains(RegexpRule.EXPRESSION_JS_TOKEN)) {
+    //   throw Exception("不支持js表达式->$rule");
+    // }
     if (RegExp(RegexpRule.PARSER_TYPE_JSON).hasMatch(rule)) {
       //我发现大多使用json的都是抓的app接口，需要配合js引擎执行一些代码，
       // 计划中不包含JS执行引擎
@@ -104,6 +112,7 @@ class HParser {
       actionParser = ActionJsoupParser(_document, _htmlString);
     }
     actionParser.objectCache = _objectCache;
+    actionParser.injectArgs = _injectArgs;
     return actionParser;
   }
 

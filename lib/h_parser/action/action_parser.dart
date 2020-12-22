@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:flutter_jscore/flutter_jscore.dart';
 import 'package:html/dom.dart';
+import 'package:yuedu_parser/h_parser/dsoup/d_elements.dart';
 import 'package:yuedu_parser/h_parser/dsoup/soup_object_cache.dart';
+import 'package:yuedu_parser/h_parser/jscore/JSRuntime.dart';
 
 import '../regexp_rule.dart';
 
@@ -7,8 +12,9 @@ abstract class ActionParser {
   Document mDocument;
   String mHtmlString;
   SoupObjectCache _objectCache;
+  Map<String,dynamic> _injectArgs;
 
-
+  var jsActionAtStr;//@js的脚本
   var ruleWithoutReplace = "";
   var replaceRegexp = "";
   var needReverse = false;
@@ -18,6 +24,10 @@ abstract class ActionParser {
     mHtmlString = htmlString;
   }
 
+
+  set injectArgs(Map<String, dynamic> value) {
+    _injectArgs = value;
+  }
 
   set objectCache(SoupObjectCache value) {
     _objectCache = value;
@@ -32,6 +42,15 @@ abstract class ActionParser {
       needReverse = true;
     }
     ruleWithoutReplace = formatRule(rule);
+
+    //0 先去掉@js规则
+
+    //先过滤@JS：，肯定是最后一个
+    var jsIndex = ruleWithoutReplace.indexOf(RegexpRule.PARSER_ACTION_JS);
+    if(jsIndex != -1){
+      jsActionAtStr = ruleWithoutReplace.substring(jsIndex+4);
+      ruleWithoutReplace = ruleWithoutReplace.substring(0,jsIndex);
+    }
 
     //1 先去掉最后的净化
     var replaceIndex = ruleWithoutReplace.indexOf(RegexpRule.PARSER_TYPE_REG_REPLACE);
@@ -64,9 +83,9 @@ abstract class ActionParser {
 
     var resultCombinationList = List<List<Element>>();
     //每条规则单独执行
-    for(var r in ruleEach){
+    for(String rule in ruleEach){
       //子类实现获取数据,过滤和替换内容也交给之类实现
-      List<Element> elements_per = getElementsEachRule(r,needFilterText);
+      List<Element> elements_per = rule.isNotEmpty?getElementsEachRule(rule,needFilterText):List();
       resultCombinationList.add(elements_per);
       if(elements_per.isNotEmpty && op_mode == RegexpRule.OPERATOR_OR){//中断获取数据
         break;
@@ -99,6 +118,12 @@ abstract class ActionParser {
       }
     }
 
+    //@js脚本的执行----------
+    if(jsActionAtStr!=null && !needFilterText){
+      //js获得结果集
+      mergeElements = jsActionForElements(jsActionAtStr, mergeElements.isEmpty?mHtmlString:mergeElements);
+    }
+
     //反转列表
     var resultList = List<Element>();
     if(needReverse){
@@ -107,6 +132,67 @@ abstract class ActionParser {
       resultList.addAll(mergeElements);
     }
     return resultList;
+  }
+
+  List<Element> jsActionForElements(String jsScript,dynamic result){
+    if(jsScript == null){
+      return [];
+    }
+    if(result == null || result.isEmpty){
+      return [];
+    }
+    var jsRuntime = JSRuntime.init(_objectCache);
+    if(_injectArgs == null){
+      _injectArgs = {};
+    }
+    if(result is List){
+      _injectArgs['result'] = DElements(result,_objectCache);
+    }
+    if(result is String){
+      _injectArgs['result'] = result;
+    }
+    jsRuntime.injectArgs(_injectArgs);
+    JSValue jsValue = jsRuntime.evaluate(jsScript);
+    //返回的是数组，或者Delements
+    if(jsValue.isObject){
+      String serialized = jsValue.createJSONString(null).string;
+      Map map = jsonDecode(serialized);
+      if(map.containsKey('uid')){
+        var temp =  _objectCache.getElements(map['uid']).elements;
+        jsRuntime.destroy();
+        return temp;
+      }
+    }
+    if(jsValue.isArray){
+      List<Element> eles = [];
+      String serialized = jsValue.createJSONString(null).string;
+      List<Map> maps = jsonDecode(serialized);
+      for (var value in maps) {
+        if(value.containsKey('uid')){
+          eles.add(_objectCache.getElement(value['uid']).element);
+        }else{//普通数组，填充属性
+          var temp = Element.tag('js_array');
+          temp.attributes = value;
+          eles.add(temp);
+        }
+      }
+      return eles;
+    }
+  }
+
+  String jsActionForString(String result,String jsScript){
+    if(jsScript == null){
+      return result;
+    }
+    var jsRuntime = JSRuntime.init(_objectCache);
+    if(_injectArgs == null){
+      _injectArgs = {};
+    }
+    _injectArgs['result'] = result;
+    jsRuntime.injectArgs(_injectArgs);
+    JSValue jsValue = jsRuntime.evaluate(jsScript);
+    jsRuntime.destroy();
+    return jsValue.string;
   }
 
   /// 得到规则的结果集合，一条规则可以有操作符，切割成 多条结果集
