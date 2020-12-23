@@ -151,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // print(value.text);
       var hparser2 = HParser(value.outerHtml);
       hparser2.objectCache = SoupObjectCache();
-      var result = hparser2.parseRuleString(r"65->{{$.novelname}}");
+      var result = hparser2.parseRuleString(r"@js:var json = JSON.parse(result); json.novelname");
       print(result);
     }
   }

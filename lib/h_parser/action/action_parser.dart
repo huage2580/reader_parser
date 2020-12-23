@@ -90,7 +90,7 @@ abstract class ActionParser {
     //每条规则单独执行
     for(String rule in ruleEach){
       //子类实现获取数据,过滤和替换内容也交给之类实现
-      List<Element> elements_per = rule.isNotEmpty?getElementsEachRule(rule,needFilterText):List();
+      List<Element> elements_per = rule.isNotEmpty?getElementsEachRule(rule,needFilterText):[_emptyHolder()];
       resultCombinationList.add(elements_per);
       if(elements_per.isNotEmpty && op_mode == RegexpRule.OPERATOR_OR){//中断获取数据
         break;
@@ -137,6 +137,13 @@ abstract class ActionParser {
       resultList.addAll(mergeElements);
     }
     return resultList;
+  }
+
+  Element _emptyHolder(){
+    var result = mHtmlString.replaceAll(r'<json>', '').replaceAll(r'</json>', '');
+    var t = Element.tag('empty');
+    t.text = result;
+    return t;
   }
 
   List<Element> jsActionForElements(String jsScript,dynamic result){
