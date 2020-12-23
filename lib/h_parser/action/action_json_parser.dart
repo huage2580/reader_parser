@@ -32,9 +32,24 @@ class ActionJsonParser extends ActionParser{
             result.add(e);
           });
         }
-        else{
+        else if(t is String){
           var e = Element.tag('json');
           e.text = t.toString();
+          result.add(e);
+        }
+        else if(t is num){
+          var e = Element.tag('json');
+          e.text = t.toString();
+          result.add(e);
+        }
+        else if(t is bool){
+          var e = Element.tag('json');
+          e.text = t.toString();
+          result.add(e);
+        }
+        else{
+          var e = Element.tag('json');
+          e.text = jsonEncode(t);
           result.add(e);
         }
       }
