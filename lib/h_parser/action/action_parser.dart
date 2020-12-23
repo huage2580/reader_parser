@@ -154,10 +154,10 @@ abstract class ActionParser {
     if(result == null || result.isEmpty){
       return [];
     }
-    var needDestroy = true;
+    var needDestroy = false;
     if(jsRuntime == null){//外部传入的JScore,外部维护生命周期
       jsRuntime = JSRuntime.init(_objectCache);
-      needDestroy = false;
+      needDestroy = true;
     }
     if(_injectArgs == null){
       _injectArgs = {};
@@ -206,10 +206,10 @@ abstract class ActionParser {
     if(jsScript == null){
       return result;
     }
-    var needDestroy = true;
+    var needDestroy = false;
     if(jsRuntime == null){//外部传入的JScore,外部维护生命周期
       jsRuntime = JSRuntime.init(_objectCache);
-      needDestroy = false;
+      needDestroy = true;
     }
     if(_injectArgs == null){
       _injectArgs = {};
