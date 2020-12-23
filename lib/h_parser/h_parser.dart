@@ -55,7 +55,7 @@ class HParser {
     }
     ActionParser actionParser = _factory(rule);
     var results = actionParser.getStrings(rule);
-    results.map((e) => actionParser.jsActionForString(e,actionParser.jsActionAtStr));
+    results = results.map((e) => actionParser.jsActionForString(e,actionParser.jsActionAtStr)).toList();
     return results;
   }
 
