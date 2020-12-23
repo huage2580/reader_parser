@@ -1,6 +1,7 @@
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:yuedu_parser/h_parser/action/action_json_parser.dart';
+import 'package:yuedu_parser/h_parser/action/action_json_replace_parser.dart';
 import 'package:yuedu_parser/h_parser/dsoup/soup_object_cache.dart';
 import 'package:yuedu_parser/h_parser/regexp_rule.dart';
 
@@ -106,7 +107,10 @@ class HParser {
     } else if (rule.startsWith(RegExp(RegexpRule.PARSER_TYPE_XPATH))) {
       _document = parse(_htmlString);
       actionParser = ActionXPathParser(_document, _htmlString);
-    }else if (RegExp(RegexpRule.PARSER_TYPE_JSON).hasMatch(rule)) {
+    }else if(RegExp(RegexpRule.EXP_JSON_MATCH).hasMatch(rule)){
+      actionParser = ActionJsonReplaceParser(_document, _htmlString);
+    }
+    else if (RegExp(RegexpRule.PARSER_TYPE_JSON).hasMatch(rule)) {
       actionParser = ActionJsonParser(_document, _htmlString);
     }
     else {

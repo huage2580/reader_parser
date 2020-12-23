@@ -44,4 +44,6 @@ class RegexpRule{
   static const String REGEXP_GROUP = r"\$(\d*)";
 
   static const String EXP_MATCH = r"[\{]?\{(.*?)\}[\}]?";
+  static const String EXP_JSON_MATCH = r"[\{]?\{(\$.*?)\}[\}]?";
+
 }

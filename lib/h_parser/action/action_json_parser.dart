@@ -12,7 +12,7 @@ class ActionJsonParser extends ActionParser{
 
   @override
   String formatRule(String rule) {
-    if(rule.startsWith('@JSon')){
+    if(rule.startsWith('@JSon')||rule.startsWith('@json')){
       return rule.substring(6);
     }
     return rule;

@@ -4,7 +4,6 @@ import 'package:flutter_jscore/flutter_jscore.dart';
 import 'package:html/dom.dart';
 import 'package:yuedu_parser/h_parser/dsoup/d_elements.dart';
 import 'package:yuedu_parser/h_parser/dsoup/soup_object_cache.dart';
-import 'package:yuedu_parser/h_parser/h_parser.dart';
 import 'package:yuedu_parser/h_parser/jscore/JSRuntime.dart';
 
 import '../regexp_rule.dart';
@@ -201,20 +200,7 @@ abstract class ActionParser {
     return jsValue.string;
   }
 
-  String jsonReplace(String ruleInput){
-    String parse(String input) {
-      if(input == null || input.trim().isEmpty){
-        return input;
-      }
-      var regexp = RegExp(RegexpRule.EXP_MATCH);
-      var mapper = (Match match) {
-        var expression = match.group(1);
-        return HParser(mHtmlString).parseRuleString(expression);
-      };
-      return input.replaceAllMapped(regexp, mapper);
-    }
-    return parse(ruleInput);
-  }
+
 
   /// 得到规则的结果集合，一条规则可以有操作符，切割成 多条结果集
   List<Element> getElementsEachRule(String rule,bool needFilterText);
