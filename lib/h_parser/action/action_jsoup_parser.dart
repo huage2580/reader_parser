@@ -105,9 +105,10 @@ class ActionJsoupParser extends ActionParser {
       }
       else {
         for(var element in elements) {
-          var ctemp = element.querySelectorAll(ruleEach);
+          var ctemp = element.querySelectorAll(actionType);
           if (ctemp != null) {
-            tempElements.addAll(ctemp);
+            ctemp = excludeElements(ctemp, excludeIndexP);
+            tempElements.addAll(addIndexElement(ctemp, cIndex));
           }
         }
       }
