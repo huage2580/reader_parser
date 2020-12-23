@@ -90,12 +90,7 @@ class ActionJsoupParser extends ActionParser {
         }
       } else if (actionType == RegexpRule.JSOUP_SUPPORT_TEXT) {
         for(var element in elements) {
-          var ctemp = element.children;
-          for(var c in ctemp){
-            if(c.text.contains(property)){
-              tempElements.add(c);
-            }
-          }
+          tempElements.addAll(_findText(property, element));
         }
       } else if (actionType == RegexpRule.JSOUP_SUPPORT_ID) {
         for(var element in elements) {
@@ -122,6 +117,24 @@ class ActionJsoupParser extends ActionParser {
     }
 
     return elements;
+  }
+
+
+  List<Element> _findText(String text,Element element){
+    var tempElements = List<Element>();
+    for(var c in element.children){
+      var nodes = c.nodes;
+      for (var value in nodes) {
+        if(value.nodeType == Node.TEXT_NODE){
+          var t = value.text;
+          if(t.contains(text)){
+            tempElements.add(c);
+          }
+        }
+      }
+      tempElements.addAll(_findText(text, c));
+    }
+    return tempElements;
   }
 
   List<Element> excludeElements(List<Element> elements,List<int> eList){

@@ -142,15 +142,15 @@ class _MyHomePageState extends State<MyHomePage> {
     var rule4 = r"$.items";
 
 
-    var hparser = HParser('<div class="test"><p>content</p><p>p2p</p></div>');
+    var hparser = HParser('<div class="test"><div><a href="baidu.com">find me</a></div><p>content</p><p>p2p</p></div>');
     hparser.objectCache = SoupObjectCache();
     hparser.injectArgs = {'baseUrl':'http://baidu.com?index=123'};
-    var result = hparser.parseRuleElements('class.test@p!1');
-    // print(result.text);
-    for (var value in result) {
-      // print(value.text);
-      print(value.outerHtml);
-    }
+    var result = hparser.parseRuleString('text.find@href');
+    print(result);
+    // for (var value in result) {
+    //   // print(value.text);
+    //   print(value.outerHtml);
+    // }
   }
 
 
