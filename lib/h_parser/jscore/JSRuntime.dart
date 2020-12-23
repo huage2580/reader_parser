@@ -292,7 +292,7 @@ class JSRuntime {
 
   void destroy() {
     context.release();
-    _objectCache.destroy();
+    // _objectCache.destroy();
   }
 
   JSValue evaluate(String script) {
