@@ -13,6 +13,7 @@ abstract class ActionParser {
   String mHtmlString;
   SoupObjectCache _objectCache;
   Map<String,dynamic> _injectArgs;
+  JSRuntime jsRuntime;
 
   var jsActionAtStr;//@js的脚本
   var ruleWithoutReplace = "";
@@ -153,7 +154,9 @@ abstract class ActionParser {
     if(result == null || result.isEmpty){
       return [];
     }
-    var jsRuntime = JSRuntime.init(_objectCache);
+    if(jsRuntime == null){
+      jsRuntime = JSRuntime.init(_objectCache);
+    }
     if(_injectArgs == null){
       _injectArgs = {};
     }
@@ -196,7 +199,9 @@ abstract class ActionParser {
     if(jsScript == null){
       return result;
     }
-    var jsRuntime = JSRuntime.init(_objectCache);
+    if(jsRuntime == null){
+      jsRuntime = JSRuntime.init(_objectCache);
+    }
     if(_injectArgs == null){
       _injectArgs = {};
     }

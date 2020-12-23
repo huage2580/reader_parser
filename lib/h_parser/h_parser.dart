@@ -3,6 +3,7 @@ import 'package:html/parser.dart';
 import 'package:yuedu_parser/h_parser/action/action_json_parser.dart';
 import 'package:yuedu_parser/h_parser/action/action_json_replace_parser.dart';
 import 'package:yuedu_parser/h_parser/dsoup/soup_object_cache.dart';
+import 'package:yuedu_parser/h_parser/jscore/JSRuntime.dart';
 import 'package:yuedu_parser/h_parser/regexp_rule.dart';
 
 import 'action/action_css_parser.dart';
@@ -23,6 +24,7 @@ class HParser {
 
   SoupObjectCache _objectCache;
   Map<String,dynamic> _injectArgs;
+  JSRuntime jsRuntime;//允许外部设置，方便做批量的解析，创建jsCore需要大量内存和耗时
 
 
   HParser(String htmlString){
@@ -120,6 +122,7 @@ class HParser {
     }
     actionParser.objectCache = _objectCache;
     actionParser.injectArgs = _injectArgs;
+    actionParser.jsRuntime = jsRuntime;
     return actionParser;
   }
 
