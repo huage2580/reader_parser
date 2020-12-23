@@ -26,6 +26,7 @@ class HParser {
 
   HParser(String htmlString){
     _htmlString = htmlString;
+    _objectCache = SoupObjectCache();
   }
 
   List<Element> parseRuleElements(String rule){
