@@ -154,8 +154,10 @@ abstract class ActionParser {
     if(result == null || result.isEmpty){
       return [];
     }
-    if(jsRuntime == null){
+    var needDestroy = true;
+    if(jsRuntime == null){//外部传入的JScore,外部维护生命周期
       jsRuntime = JSRuntime.init(_objectCache);
+      needDestroy = false;
     }
     if(_injectArgs == null){
       _injectArgs = {};
@@ -174,7 +176,9 @@ abstract class ActionParser {
       Map map = jsonDecode(serialized);
       if(map.containsKey('uid')){
         var temp =  _objectCache.getElements(map['uid']).elements;
-        jsRuntime.destroy();
+        if(needDestroy){
+          jsRuntime.destroy();
+        }
         return temp;
       }
     }
@@ -191,6 +195,9 @@ abstract class ActionParser {
           eles.add(temp);
         }
       }
+      if(needDestroy){
+        jsRuntime.destroy();
+      }
       return eles;
     }
   }
@@ -199,8 +206,10 @@ abstract class ActionParser {
     if(jsScript == null){
       return result;
     }
-    if(jsRuntime == null){
+    var needDestroy = true;
+    if(jsRuntime == null){//外部传入的JScore,外部维护生命周期
       jsRuntime = JSRuntime.init(_objectCache);
+      needDestroy = false;
     }
     if(_injectArgs == null){
       _injectArgs = {};
@@ -208,7 +217,9 @@ abstract class ActionParser {
     _injectArgs['result'] = result;
     jsRuntime.injectArgs(_injectArgs);
     JSValue jsValue = jsRuntime.evaluate(jsScript);
-    jsRuntime.destroy();
+    if(needDestroy){
+      jsRuntime.destroy();
+    }
     return jsValue.string;
   }
 
