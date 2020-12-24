@@ -7,7 +7,9 @@ import 'package:yuedu_parser/h_parser/regexp_rule.dart';
 
 class ActionJsonReplaceParser extends ActionParser{
 
-  ActionJsonReplaceParser(Document document, String htmlString) : super(document, htmlString);
+  ActionJsonReplaceParser(Element element, String htmlString)
+      : super(element, htmlString);
+
 
   @override
   String formatRule(String rule) {

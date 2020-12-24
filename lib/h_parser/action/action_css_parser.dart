@@ -4,8 +4,9 @@ import '../regexp_rule.dart';
 import 'action_parser.dart';
 
 class ActionCssParser extends ActionParser {
-  ActionCssParser(Document document, String htmlString)
-      : super(document, htmlString);
+  ActionCssParser(Element element, String htmlString)
+      : super(element, htmlString);
+
 
   @override
   List<Element> getElementsEachRule(String rule, bool needFilterText) {
@@ -18,7 +19,7 @@ class ActionCssParser extends ActionParser {
       filterReg = u_split.removeLast();
     }
 
-    var elements = mDocument.querySelectorAll(u_split[0]);
+    var elements = mElement.querySelectorAll(u_split[0]);
 
     for(var i=1;i<u_split.length;i++){
       if(elements.isEmpty){

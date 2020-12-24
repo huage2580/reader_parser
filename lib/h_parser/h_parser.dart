@@ -19,7 +19,7 @@ import 'regexp_rule.dart';
 ///
 
 class HParser {
-  Document _document;
+  Element _document;
   String _htmlString;
 
   SoupObjectCache _objectCache;
@@ -29,6 +29,10 @@ class HParser {
 
   HParser(String htmlString){
     _htmlString = htmlString;
+    _objectCache = SoupObjectCache();
+  }
+  HParser.forNode(Element element){
+    _document = element;
     _objectCache = SoupObjectCache();
   }
 
@@ -100,30 +104,45 @@ class HParser {
 
     //-------------分派解析器---------------
     if (rule.startsWith(RegExp(RegexpRule.PARSER_TYPE_CSS))) {
-      _document = parse(_htmlString);
+      _parseElement();
       actionParser = ActionCssParser(_document, _htmlString);
     } else if (rule.startsWith(RegExp(RegexpRule.PARSER_TYPE_REGEXP))) {
+      _parseString();
       actionParser = ActionRegexpParser(_document, _htmlString);
     } else if (rule.startsWith(RegExp(RegexpRule.PARSER_TYPE_REG_REPLACE))) {
+      _parseString();
       actionParser = ActionReplaceParser(_document, _htmlString);
     } else if (rule.startsWith(RegExp(RegexpRule.PARSER_TYPE_XPATH))) {
-      _document = parse(_htmlString);
+      _parseElement();
       actionParser = ActionXPathParser(_document, _htmlString);
     }else if(RegExp(RegexpRule.EXP_JSON_MATCH).hasMatch(rule)){
+      _parseString();
       actionParser = ActionJsonReplaceParser(_document, _htmlString);
     }
     else if (RegExp(RegexpRule.PARSER_TYPE_JSON).hasMatch(rule)) {
+      _parseString();
       actionParser = ActionJsonParser(_document, _htmlString);
     }
     else {
       //默认解析
-      _document = parse(_htmlString);
+      _parseElement();
       actionParser = ActionJsoupParser(_document, _htmlString);
     }
     actionParser.objectCache = _objectCache;
     actionParser.injectArgs = _injectArgs;
     actionParser.jsRuntime = jsRuntime;
     return actionParser;
+  }
+
+  void _parseElement(){
+    if(_document == null){
+      _document = parse(_htmlString).documentElement;
+    }
+  }
+  void _parseString(){
+    if(_htmlString == null){
+      _htmlString = _document.outerHtml;
+    }
   }
 
 

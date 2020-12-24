@@ -28,8 +28,7 @@ SelectorGroup parseSelectorGroup(String xpath) {
   }
   //只作用于自身的时候
   if (selectorSources.isEmpty) {
-    selectorSources.add('//body');
-    selectorSources.add('/*');
+    selectorSources.add('/.');
   }
 
   for (var source in selectorSources) {
@@ -79,6 +78,10 @@ Selector _parseSelector(String input) {
   //匹配所有父节点
   if (source == "..") {
     return Selector(TokenKind.PARENT, [ElementSelector("*", "")]);
+  }
+  //匹配当前节点
+  if(source == "."){
+    return Selector(TokenKind.CURRENT, [ElementSelector("*", "")]);
   }
   var selector = Selector(type, simpleSelectors);
 

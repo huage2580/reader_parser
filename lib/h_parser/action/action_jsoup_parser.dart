@@ -6,8 +6,8 @@ import 'action_parser.dart';
 class ActionJsoupParser extends ActionParser {
   final INVALID = 99999999;
 
-  ActionJsoupParser(Document document, String htmlString)
-      : super(document, htmlString);
+  ActionJsoupParser(Element element, String htmlString)
+      : super(element, htmlString);
 
   @override
   List<Element> getElementsEachRule(String rule, bool needFilterText) {
@@ -24,11 +24,11 @@ class ActionJsoupParser extends ActionParser {
     }
 
     var elements = List<Element>();
-    elements = mDocument.children;
+    elements.add(mElement);
 
     //不执行，只过滤子element然后获得字符串规则
     if (u_split.isEmpty && needFilterText) {
-      elements = mDocument.body.children;
+      //pass
     } else if (u_split.isEmpty) {
       throw Exception('不支持的规则->$rule');
     }

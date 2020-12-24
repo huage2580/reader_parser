@@ -6,8 +6,8 @@ import '../regexp_rule.dart';
 import 'action_parser.dart';
 
 class ActionXPathParser extends ActionParser {
-  ActionXPathParser(Document document, String htmlString)
-      : super(document, htmlString);
+  ActionXPathParser(Element element, String htmlString)
+      : super(element, htmlString);
 
   @override
   String formatRule(String rule) {
@@ -22,7 +22,7 @@ class ActionXPathParser extends ActionParser {
   @override
   List<Element> getElementsEachRule(String rule, bool needFilterText) {
     var result = List<Element>();
-    var temp = XPath(mDocument.documentElement).query(rule);
+    var temp = XPath(mElement).query(rule);
     if (needFilterText) {
       var strList = temp.list();
       for (var str in strList) {

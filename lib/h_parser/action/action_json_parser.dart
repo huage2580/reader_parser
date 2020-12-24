@@ -6,8 +6,8 @@ import 'package:yuedu_parser/h_parser/action/action_parser.dart';
 import 'package:json_path/json_path.dart';
 
 class ActionJsonParser extends ActionParser{
-  ActionJsonParser(Document document, String htmlString) : super(document, htmlString){
-    super.mHtmlString = htmlString.replaceAll(r'<json>', '').replaceAll(r'</json>', '');
+  ActionJsonParser(Element element, String htmlString) : super(element, htmlString){
+  super.mHtmlString = htmlString.replaceAll(r'<json>', '').replaceAll(r'</json>', '');
   }
 
   @override

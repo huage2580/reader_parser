@@ -9,7 +9,7 @@ import 'package:yuedu_parser/h_parser/jscore/JSRuntime.dart';
 import '../regexp_rule.dart';
 
 abstract class ActionParser {
-  Document mDocument;
+  Element mElement;
   String mHtmlString;
   SoupObjectCache _objectCache;
   Map<String,dynamic> _injectArgs;
@@ -20,8 +20,8 @@ abstract class ActionParser {
   var replaceRegexp = "";
   var needReverse = false;
 
-  ActionParser(Document document,String htmlString){
-    mDocument = document;
+  ActionParser(Element element,String htmlString){
+    mElement = element;
     mHtmlString = htmlString;
   }
 

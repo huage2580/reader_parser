@@ -4,8 +4,9 @@ import '../regexp_rule.dart';
 import 'action_parser.dart';
 
 class ActionRegexpParser extends ActionParser {
-  ActionRegexpParser(Document document, String htmlString)
-      : super(document, htmlString);
+  ActionRegexpParser(Element element, String htmlString)
+      : super(element, htmlString);
+
 
   @override
   String formatRule(String rule) {
