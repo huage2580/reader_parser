@@ -163,35 +163,32 @@ abstract class ActionParser {
       _injectArgs = {};
     }
     if(result is List){
-      _injectArgs['result'] = DElements(result,_objectCache);
+      Element first = result.first;
+      if(first.localName == 'empty'){
+        _injectArgs['result'] = first.text;
+      }else{
+        _injectArgs['result'] = DElements(result,_objectCache);
+      }
     }
     if(result is String){
       _injectArgs['result'] = result;
     }
     jsRuntime.injectArgs(_injectArgs);
     JSValue jsValue = jsRuntime.evaluate(jsScript);
+
     //返回的是数组，或者Delements
-    if(jsValue.isObject){
-      String serialized = jsValue.createJSONString(null).string;
-      Map map = jsonDecode(serialized);
-      if(map.containsKey('uid')){
-        var temp =  _objectCache.getElements(map['uid']).elements;
-        if(needDestroy){
-          jsRuntime.destroy();
-        }
-        return temp;
-      }
-    }
     if(jsValue.isArray){
       List<Element> eles = [];
       String serialized = jsValue.createJSONString(null).string;
-      List<Map> maps = jsonDecode(serialized);
+      List<dynamic> maps = jsonDecode(serialized);
       for (var value in maps) {
         if(value.containsKey('uid')){
           eles.add(_objectCache.getElement(value['uid']).element);
         }else{//普通数组，填充属性
           var temp = Element.tag('js_array');
-          temp.attributes = value;
+          value.forEach((k, v) {
+            temp.attributes[k] = v;
+          });
           eles.add(temp);
         }
       }
@@ -199,6 +196,18 @@ abstract class ActionParser {
         jsRuntime.destroy();
       }
       return eles;
+    }
+
+    if(jsValue.isObject){
+      String serialized = jsValue.createJSONString(null).string;
+      Map map = jsonDecode(serialized);
+      if(map.containsKey('uid') && map.containsKey('type') && map['type'] == 'DElements'){
+        var temp =  _objectCache.getElements(map['uid']).elements;
+        if(needDestroy){
+          jsRuntime.destroy();
+        }
+        return temp;
+      }
     }
   }
 
