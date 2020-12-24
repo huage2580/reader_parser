@@ -36,14 +36,14 @@ class JSRuntime {
   }
 
   void injectArgs(Map<String, dynamic> map) {
-    //todo 改成普通的脚本执行方式，方便注入elements
+    //改成普通的脚本执行方式，方便注入elements
     map.forEach((key, value) {
       if(value is DElement){
-        evaluate("var $key = 'new DElement(${value.uid});'");
+        evaluate("var $key = new DElement(${value.uid});");
       }else if(value is DElements){
-        evaluate("var $key = 'new DElements(${value.uid});'");
+        evaluate("var $key = new DElements(${value.uid});");
       }else{
-        evaluate("var $key = '$value';");
+        evaluate("var $key = `$value`;");
       }
     });
   }
