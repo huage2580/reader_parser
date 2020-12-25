@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter_jscore/flutter_jscore.dart';
 import 'package:html/dom.dart';
 import 'package:yuedu_parser/h_parser/dsoup/d_elements.dart';
 import 'package:yuedu_parser/h_parser/dsoup/soup_object_cache.dart';
@@ -174,13 +173,12 @@ abstract class ActionParser {
       _injectArgs['result'] = result;
     }
     jsRuntime.injectArgs(_injectArgs);
-    JSValue jsValue = jsRuntime.evaluate(jsScript);
+    var jsValue = jsRuntime.evaluate(jsScript);
 
     //返回的是数组，或者Delements
-    if(jsValue.isArray){
+    if(jsValue is List){
       List<Element> eles = [];
-      String serialized = jsValue.createJSONString(null).string;
-      List<dynamic> maps = jsonDecode(serialized);
+      List<dynamic> maps = jsValue;
       for (var value in maps) {
         if(value.containsKey('uid')){
           eles.add(_objectCache.getElement(value['uid']).element);
@@ -198,9 +196,8 @@ abstract class ActionParser {
       return eles;
     }
 
-    if(jsValue.isObject){
-      String serialized = jsValue.createJSONString(null).string;
-      Map map = jsonDecode(serialized);
+    if(jsValue is Map){
+      Map map = jsValue;
       if(map.containsKey('uid') && map.containsKey('type') && map['type'] == 'DElements'){
         var temp =  _objectCache.getElements(map['uid']).elements;
         if(needDestroy){
@@ -225,11 +222,11 @@ abstract class ActionParser {
     }
     _injectArgs['result'] = result;
     jsRuntime.injectArgs(_injectArgs);
-    JSValue jsValue = jsRuntime.evaluate(jsScript);
+    var jsValue = jsRuntime.evaluate(jsScript);
     if(needDestroy){
       jsRuntime.destroy();
     }
-    return jsValue.string;
+    return jsValue.toString();
   }
 
 

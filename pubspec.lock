@@ -104,15 +104,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_jscore:
+  flutter_qjs:
     dependency: "direct main"
     description:
       path: "."
       ref: HEAD
-      resolved-ref: b4d06a5758b4eb97dfc39dd4c67626a6586ea30b
-      url: "https://github.com/huage2580/flutter_jscore.git"
+      resolved-ref: f9d1ac17ca5296ba6cf09cd95f8e2099906a0aed
+      url: "https://github.com/huage2580/flutter_qjs.git"
     source: git
-    version: "0.1.1"
+    version: "0.1.4"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -251,3 +251,4 @@ packages:
     version: "2.1.0-nullsafety.5"
 sdks:
   dart: ">=2.12.0-0.0 <3.0.0"
+  flutter: ">=1.20.0 <2.0.0"

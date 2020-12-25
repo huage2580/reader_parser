@@ -2,11 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'package:flutter_jscore/binding/js_context_ref.dart';
-import 'package:flutter_jscore/binding/js_object_ref.dart' as jsObject;
-import 'package:flutter_jscore/binding/js_string_ref.dart';
-import 'package:flutter_jscore/flutter_jscore.dart';
-import 'package:flutter_jscore/jscore/js_value.dart';
+import 'package:flutter_qjs/flutter_qjs.dart';
 import 'package:yuedu_parser/h_parser/dsoup/d_element.dart';
 import 'package:yuedu_parser/h_parser/dsoup/d_elements.dart';
 import 'package:yuedu_parser/h_parser/dsoup/dsoup.dart';
@@ -16,20 +12,15 @@ import 'package:yuedu_parser/h_parser/jscore/FunctionBinding.dart';
 import 'package:yuedu_parser/h_parser/jscore/js_init_script.dart';
 
 class JSRuntime {
-  Pointer _contextGroup;
-  Pointer _globalContext;
-  JSContext context;
-  Pointer _globalObject;
 
   Map<String,JSMethodCall> bindingMethod = HashMap();
   SoupObjectCache _objectCache;
+  FlutterQjs _qjs;
 
   JSRuntime.init(SoupObjectCache cache) {
     _objectCache = cache;
-    _contextGroup = jSContextGroupCreate();
-    _globalContext = jSGlobalContextCreateInGroup(_contextGroup, nullptr);
-    _globalObject = jSContextGetGlobalObject(_globalContext);
-    context = JSContext(_globalContext);
+    _qjs = FlutterQjs();
+    //
     injectFunction();
     bindingFunction();
     injectClass();
@@ -50,48 +41,37 @@ class JSRuntime {
 
 
   void injectFunction(){
-    // 注册flutter.call方法
-    var flutterJSClass = JSClass.create(JSClassDefinition(
-      version: 0,
-      attributes: JSClassAttributes.kJSClassAttributeNone,
-      className: 'flutter',
-      staticFunctions: [
-        JSStaticFunction(
-          name: 'call',
-          callAsFunction: Pointer.fromFunction(FunctionBinding.sendMessageBridgeFunction),
-          attributes: JSPropertyAttributes.kJSPropertyAttributeNone,
-        ),
-      ],
-      staticValues: [
-      ],
-    ));
-    var flutterJSObject = JSObject.make(context, flutterJSClass);
-    context.globalObject.setProperty('flutter', flutterJSObject.toValue(),
-        JSPropertyAttributes.kJSPropertyAttributeDontDelete);
+
+    _qjs.evaluateSync('''
+        var flutter = new function(){
+            this.call = function(){
+                var argsArray = new Array();
+                var methodName = arguments[0];
+                for (var i = 1; i < arguments.length; i++) {
+                    argsArray.push(arguments[i]);
+                }
+                //console.log('测试flutter call->'+methodName+' ['+argsArray+']');
+                return channel(methodName, argsArray);
+            };
+        };
+    ''');
+
   }
 
   void bindingFunction(){
-    FunctionBinding.sendMessageDartFunc = (ctx,function,thisObject,argumentCount,arguments,exception){
-      var methodName = JSValue(context, arguments[0]).string;
-      print('js want to call [$methodName]');
+    _qjs.methodHandler = (methodName,args){//目前都是字符串参数,返回也是字符串
       if(bindingMethod.containsKey(methodName)){
         var arg1;
-        if(argumentCount > 1){
-          arg1 = JSValue(context, arguments[1]).string;
+        if(args.length > 0){
+          arg1 = args[0];
         }
         var arg2;
-        if(argumentCount > 2){
-          var jsValue = JSValue(context, arguments[2]);
-          if(jsValue.isObject || jsValue.isArray){
-            arg2 = jsValue.createJSONString(null).string;
-          }else{
-            arg2 = jsValue.string;
-          }
+        if(args.length > 1){
+          arg2 = args[1];
         }
-        String result = bindingMethod[methodName](argumentCount,arguments,arg1,arg2);
-        return result==null?nullptr:JSValue.makeString(context, result).pointer;
+        return bindingMethod[methodName](-1,null,arg1,arg2);
       }
-      return nullptr;
+      return null;
     };
     _bindingMethods();
   }
@@ -280,28 +260,18 @@ class JSRuntime {
     evaluate(JsInitScript.JSOUP_CLASS);
   }
 
-  dynamic _generateJsString(String string) {
-    Pointer<Utf8> nameCString = Utf8.toUtf8(string);
-    return jSStringCreateWithUTF8CString(nameCString);
-  }
-  
   void _addBindingMethod(String methodName,JSMethodCall methodCall){
     bindingMethod[methodName] = methodCall;
   }
 
 
   void destroy() {
-    context.release();
-    // _objectCache.destroy();
+    // context.release();
+    _qjs.close();
   }
 
-  JSValue evaluate(String script) {
-    var jsvalue = context.evaluate(script);
-    var exceptionValue = context.exception.getValue(context);
-    if(exceptionValue.isObject){
-      print('JS_ERROR: ${exceptionValue.string}');
-    }
-    return jsvalue;
+  dynamic evaluate(String script) {
+    return _qjs.evaluateSync(script);
   }
 
 

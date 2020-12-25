@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_jscore/flutter_jscore.dart';
 import 'package:yuedu_parser/h_parser/dsoup/soup_object_cache.dart';
 import 'package:yuedu_parser/h_parser/h_parser.dart';
 import 'package:yuedu_parser/h_parser/jscore/JSRuntime.dart';
@@ -118,15 +117,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void runJS() {
     var jsRuntime = JSRuntime.init(SoupObjectCache());
     jsRuntime.injectArgs({'id':'123'});
-    JSValue jsValue = jsRuntime.evaluate('''
+    var jsValue = jsRuntime.evaluate('''
     var doc = org.jsoup.Jsoup.parse('<div><p>content</p><p>p2p</p></div>');
     doc.select('p');
     ''');
-    print(jsValue.string);
-    if(jsValue.isObject){
-      String serialized = jsValue.createJSONString(null).string;
-      print(serialized);
-    }
+    print(jsValue);
     jsRuntime.destroy();
 
   }
@@ -145,22 +140,22 @@ class _MyHomePageState extends State<MyHomePage> {
     var rule_toc = '<js>var url=\"https://v3api.dmzj.com/novel/download/999999_\";var list=[];JSON.parse(result).forEach(li=>{var ch_list=li.chapters.map(x=>({vol:li.volume_id,chap:x.chapter_id,name:li.volume_name+\"\"+x.chapter_name}));Array.prototype.push.apply(list,ch_list);});list.map(ch=>({name:ch.name,link:url+ch.vol+\"_\"+ch.chap+\".txt\"}))</js>';
     var cache = SoupObjectCache();
     var jsRuntime = JSRuntime.init(cache);
-    var hparser = HParser('test_text');
+    var hparser = HParser('<div><p>content</p><p>p2p</p></div>');
     hparser.objectCache = SoupObjectCache();
     hparser.injectArgs = {'baseUrl':'http://baidu.com?index=123'};
-    var result = hparser.parseRuleString('@js:result.replace(/&[a-z]{4,};/ig,"")');
+    var result = hparser.parseRuleElements("@js:var doc = org.jsoup.Jsoup.parse('<div><p>content</p><p>p2p</p></div>');doc.select('p');");
     var t = DateTime.now();
     print('${t}');
-    // for (var value in result) {
-    //   // print(value.text);
-    //   // print(value.outerHtml);
-    //   var eParser = HParser.forNode(value);
-    //   eParser.jsRuntime = jsRuntime;
-    //   var result = eParser.parseRuleString('name');
-    //   print(result);
-    // }
+    for (var value in result) {
+      // print(value.text);
+      print(value.outerHtml);
+      // var eParser = HParser.forNode(value);
+      // eParser.jsRuntime = jsRuntime;
+      // var result = eParser.parseRuleString('name');
+      // print(result);
+    }
 
-    print(result);
+    // print(result);
     print('${DateTime.now().difference(t).inMilliseconds}');
     jsRuntime.destroy();
   }
